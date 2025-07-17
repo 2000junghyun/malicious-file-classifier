@@ -15,7 +15,32 @@ with open(target_path, "r", encoding="utf-8") as f:
 
 s3 = boto3.client("s3")
 
-def classify_static_metadata(bucket: str, key: str, test_mode: bool = True) -> dict:
+
+def metadata_classifier_handler(bucket, key):
+    result = classify__metadata(bucket, key)
+
+    if result["status"] == "error":
+        print("[!] Error during metadata analysis:", result["error"])
+        print("[TODO] Invoke log_handler(event)")
+        return result["status"]
+
+    if result["status"] == "malicious":
+        print(f"[!] Metadata analysis flagged the file: reasons={result['reasons']}, ext={result['ext']}, type={result['content_type']}, size={result['size']}, weight={result['weight']}")
+        print("[TODO] Invoke threat_handler(event)")
+        print("[TODO] Invoke alert_handler(event)")
+        return result["status"]
+    
+    elif result["status"] == "suspicious":
+        print(f"[!] Metadata analysis flagged the file: reasons={result['reasons']}, ext={result['ext']}, type={result['content_type']}, size={result['size']}, weight={result['weight']}")
+        print("[TODO] Invoke alert_handler(event)")
+        return result["status"]
+    
+    else:
+        print("[+] File passed the metadata analysis")
+        return result["status"]
+
+
+def classify__metadata(bucket: str, key: str, test_mode: bool = True) -> dict:
     total_weight = 0
     reasons = []
 

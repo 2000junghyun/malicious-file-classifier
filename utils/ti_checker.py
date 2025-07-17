@@ -13,6 +13,26 @@ HY_API_KEY = os.getenv("HY_API_KEY")
 
 s3 = boto3.client('s3')
 
+
+def ti_checker_handler(bucket, key):
+    result = check_file_hash_in_ti(bucket, key)
+
+    if result["status"] == "error":
+        print("[!] Error during TI analysis:", result["error"])
+        print("[TODO] Invoke log_handler(event)")
+        return result["status"]
+
+    if result["status"] == "malicious":
+        print(f"[!] TI analysis flagged the file: source={result['source']}, sha256={result['sha256']}")
+        print("[TODO] Invoke threat_handler(event)")
+        print("[TODO] Invoke alert_handler(event)")
+        return result["status"]
+
+    else:
+        print("[+] File passed the TI analysis")
+        return result["status"]
+
+
 def check_file_hash_in_ti(bucket: str, key: str, test_mode: bool = True) -> dict:
     try:
         if test_mode:
@@ -60,6 +80,7 @@ def check_file_hash_in_ti(bucket: str, key: str, test_mode: bool = True) -> dict
     except Exception as e:
         return {"error": str(e)}
 
+
 def check_virustotal(sha256: str) -> dict:
     url = f"https://www.virustotal.com/api/v3/files/{sha256}"
     headers = {"x-apikey": VT_API_KEY}
@@ -78,6 +99,7 @@ def check_virustotal(sha256: str) -> dict:
     
     else:
         return {"error": f"VirusTotal error: {r.status_code}, sha256: {sha256}"}
+  
   
 def check_hybrid_analysis(sha256: str) -> dict:
     url = f"https://www.hybrid-analysis.com/api/v2/search/hash?hash={sha256}"
