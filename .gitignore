@@ -17,3 +17,4 @@ venv/
 # Test files
 test_files/
 modules/
+threat_handler.py
