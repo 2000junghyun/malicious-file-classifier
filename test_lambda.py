@@ -1,8 +1,6 @@
 import os
 import json
 from lambda_function import lambda_handler
-# from test import lambda_handler
-# from modules.content_signature_checker import lambda_handler
 
 # event.json 파일 로드
 current_dir = os.path.dirname(os.path.abspath(__file__))

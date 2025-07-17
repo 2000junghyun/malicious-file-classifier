@@ -1,5 +1,5 @@
 from utils.ti_checker import check_file_hash_in_ti
-from utils.static_analyzer.metadata_classifier import classify_static_metadata
+from utils.metadata_classifier import classify_static_metadata
 from utils.content_signature_checker import check_content_signature
 
 def lambda_handler(event, context=None):

@@ -8,7 +8,7 @@ from utils.static_analyzer.size_checker import is_suspicious_size
 
 # meta_data.json 파일 로드
 current_dir = os.path.dirname(os.path.abspath(__file__))
-target_path = os.path.join(current_dir, "..", "..", "test_files", "meta_data.json")
+target_path = os.path.join(current_dir, "..", "test_files", "meta_data.json")
 
 with open(target_path, "r", encoding="utf-8") as f:
     TEST_RESPONSE = json.load(f)
