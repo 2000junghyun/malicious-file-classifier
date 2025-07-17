@@ -34,7 +34,6 @@ def lambda_handler(event, context=None):
         # 6. AI bases analysis
 
 
-        # 최종 파일 검사 통과
         if ti_result == "clear" and static_result == "clear" and signature_result == "clear" and fuzzy_hash_result == "clear":
             print(f"[+] File is safe: {key}")
 
